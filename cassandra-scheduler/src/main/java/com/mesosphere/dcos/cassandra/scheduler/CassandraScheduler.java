@@ -23,6 +23,7 @@ import com.mesosphere.dcos.cassandra.scheduler.tasks.CassandraTasks;
 import io.dropwizard.lifecycle.Managed;
 import org.apache.mesos.MesosSchedulerDriver;
 import org.apache.mesos.Protos;
+import org.apache.mesos.Protos.Filters;
 import org.apache.mesos.Scheduler;
 import org.apache.mesos.SchedulerDriver;
 import org.apache.mesos.offer.OfferAccepter;
@@ -62,6 +63,7 @@ public class CassandraScheduler implements Scheduler, Managed {
     private final RepairManager repair;
     private final SeedsManager seeds;
     private final ExecutorService executor;
+    private final Filters offerFilters;
 
     @Inject
     public CassandraScheduler(
@@ -101,6 +103,8 @@ public class CassandraScheduler implements Scheduler, Managed {
         this.repair = repair;
         this.seeds = seeds;
         this.executor = executor;
+        this.offerFilters = Filters.newBuilder().setRefuseSeconds(mesosConfig.getRefuseSeconds()).build();
+        LOGGER.info("Creating an offer filter with refuse_seconds = {}", mesosConfig.getRefuseSeconds());
     }
 
     @Override
@@ -342,6 +346,6 @@ public class CassandraScheduler implements Scheduler, Managed {
     private void declineOffer(SchedulerDriver driver, Protos.Offer offer) {
         Protos.OfferID offerId = offer.getId();
         LOGGER.info("Scheduler declining offer: {}", offerId);
-        driver.declineOffer(offerId);
+        driver.declineOffer(offerId, offerFilters);
     }
 }

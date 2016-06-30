@@ -35,7 +35,8 @@ public class CassandraSchedulerConfiguration extends Configuration {
             MesosConfig.create(
                     "master.mesos:2181",
                     "/mesos",
-                    10000L
+                    10000L,
+                    30
             );
     private CuratorFrameworkConfig curatorConfig =
             CuratorFrameworkConfig.create(
