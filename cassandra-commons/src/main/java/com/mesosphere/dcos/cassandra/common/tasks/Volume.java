@@ -136,7 +136,8 @@ public class Volume {
                         .setPersistence(Protos.Resource.DiskInfo.Persistence
                                 .newBuilder().setId(
                                         (id == null || id.isEmpty()) ?
-                                                UUID.randomUUID().toString() : id))
+                                                UUID.randomUUID().toString() : id)
+                                .setPrincipal(principal))
                         .setVolume(Protos.Volume.newBuilder()
                                 .setContainerPath(path)
                                 .setMode(Protos.Volume.Mode.RW
